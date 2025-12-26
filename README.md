@@ -179,7 +179,7 @@ Stage 4: Performance Considerations
 ### 1️⃣ Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/ai-research-assistant.git
+git clone https://github.com/Rudra-G-23/ai-research-assistant.git
 cd ai-research-assistant
 ```
 
