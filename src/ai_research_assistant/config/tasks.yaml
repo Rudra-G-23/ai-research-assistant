@@ -1,0 +1,113 @@
+tasks:
+
+  topic_decomposition_task:
+    agent: topic_decomposer
+    name: Topic Decomposition Task
+    description: >
+      Analyze the provided raw topic and break it down into a complete,
+      logically structured set of subtopics that cover the topic from
+      fundamentals to advanced concepts.
+      The breakdown must be concept-driven, not tool-driven.
+    instructions:
+      - Identify the core purpose of the topic
+      - Detect implicit prerequisites a beginner may lack
+      - Decompose the topic into atomic, non-overlapping subtopics
+      - Ensure no foundational concept is missing
+      - Avoid implementation or coding details unless essential
+    constraints:
+      - Do not generate questions
+      - Do not create a learning order
+      - Do not explain how to learn yet
+    input:
+      - raw_topic
+    expected_output:
+      format: bullet_list
+      structure:
+        - subtopic_name
+        - short_reason_for_inclusion
+
+  question_generation_task:
+    agent: question_generator
+    name: Question Generation Task
+    description: >
+      Generate deep, structured questions for each subtopic that guide
+      the learner toward conceptual clarity, practical reasoning,
+      and advanced understanding.
+    instructions:
+      - Generate questions for every subtopic
+      - Divide questions into beginner, intermediate, and advanced levels
+      - Focus on "why", "how", and "when" questions
+      - Ensure questions encourage reasoning, not memorization
+    constraints:
+      - Do not add new subtopics
+      - Do not change subtopic names
+      - Do not propose a learning order
+    input:
+      - subtopics_from_topic_decomposition_task
+    expected_output:
+      format: grouped_questions
+      structure:
+        subtopic:
+          beginner:
+            - conceptual_questions
+          intermediate:
+            - applied_reasoning_questions
+          advanced:
+            - optimization_edge_case_questions
+
+  learning_path_planning_task:
+    agent: learning_path_planner
+    name: Learning Path Planning Task
+    description: >
+      Organize the subtopics and their questions into a clear,
+      progressive learning roadmap that moves from beginner
+      foundations to advanced mastery.
+    instructions:
+      - Group related subtopics into learning stages
+      - Order stages from simplest to most complex
+      - Assign key questions to each stage
+      - Define expected learning outcomes per stage
+    constraints:
+      - Do not introduce new concepts
+      - Do not generate explanations for humans yet
+      - Do not skip foundational stages
+    input:
+      - subtopics_from_topic_decomposition_task
+      - questions_from_question_generation_task
+    expected_output:
+      format: staged_roadmap
+      structure:
+        stage:
+          stage_name:
+            concepts_covered:
+              - subtopics
+            key_questions:
+              - selected_questions
+            expected_outcome:
+              - skills_and_understanding
+
+  human_explanation_task:
+    agent: human_explainer
+    name: Human Explanation Task
+    description: >
+      Translate the structured learning roadmap into a clear,
+      motivating, and beginner-friendly explanation that guides
+      the learner step by step.
+    instructions:
+      - Explain why the learning order is structured this way
+      - Describe what the learner should focus on at each stage
+      - Set expectations for common struggles and progress
+      - Maintain a mentor-like, conversational tone
+    constraints:
+      - Do not add new technical concepts
+      - Do not modify the learning roadmap
+      - Avoid academic or overly formal language
+    input:
+      - learning_path_from_learning_path_planning_task
+    expected_output:
+      format: narrative_explanation
+      structure:
+        - how_to_start
+        - why_each_stage_matters
+        - what_challenges_to_expect
+        - how_mastery_builds_over_time
